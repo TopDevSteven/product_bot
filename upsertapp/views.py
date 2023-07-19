@@ -12,7 +12,7 @@ def create_embedding(content):
     try:
         res = openai.Embedding.create(
             model="text-embedding-ada-002",
-            input=content[1500:2000]
+            input=content[2000:2700]
         )
         embedding =  []
         vec_indexes = []

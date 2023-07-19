@@ -35,5 +35,5 @@ def parsing_shopify(file_path):
         option1_name = row['Option1 Name']
         option1_value = row['Option1 Value']
         sentences.append(f'Products with Title is {title} and Handle is http://www.hectool.com/products/{handle} have product which its Vendor is {vendor},  Published is {published}, Option1_Name is {option1_name} and Option1_Value is {option1_value}')
-    
+    print(len(sentences))
     return sentences

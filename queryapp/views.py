@@ -40,6 +40,8 @@ def chat(request):
         total_tokens = sum([len(m["content"].split()) for m in chat_history])
         while total_tokens > 4000: # slightly less than model's max token limit for safety
             removed_message = chat_history.pop(0)
+            removed_message = chat_history.pop(0)
+            removed_message = chat_history.pop(1)
             total_tokens -= len(removed_message["content"])
         try:
             res = openai.ChatCompletion.create(
