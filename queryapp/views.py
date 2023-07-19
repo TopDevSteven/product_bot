@@ -47,10 +47,10 @@ def chat(request):
                 temperature = 0.9,
                 messages = [
                     {"role": "system", "content" : assistant},
-                    {"role": "user", "content": ""},
-                    {"role": "user", "content": ""},
-                    {"role": "user", "content": ""},
-                    {"role": "user", "content": ""},
+                    {"role": "user", "content": "Hello!"},
+                    {"role": "assistant", "content": "Hello! I am your technical Hectool assistant. How can I help you?"},
+                    {"role": "user", "content": "I am looking for clamping heads"},
+                    {"role": "assistant", "content": "What type of clamping heads are you looking for? Or for what type of machine? Tell me more so I can help you find the correct product!"},
                     *chat_history
                 ]
             )
