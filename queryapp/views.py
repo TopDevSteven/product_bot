@@ -28,9 +28,7 @@ def home(request):
 def chat(request):
     if request.method == "POST":
         query = json.loads(request.body)
-        print(query)
         query_res = query_embedding([query['query']])
-        print(query_res)
         if not query_res:
             return JsonResponse({"message": "Querying Embedding Error!!!"})
         basedon_content = []
@@ -38,7 +36,6 @@ def chat(request):
         for i in query_res["matches"]:
             basedon_content.append(i["metadata"]["content"])
         basedon_content = get_uniquedata_shopify(basedon_content)
-        print(basedon_content)
         for i in basedon_content:
             json_lists += i
         json_lists = limit_string_tokens(json_lists, 2000)
@@ -90,7 +87,6 @@ def create_embedding(content):
             model="text-embedding-ada-002",
             input=content
         )
-        print(res)
         embedding =  []
         vec_indexes = []
         idx = 0
