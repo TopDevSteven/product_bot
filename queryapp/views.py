@@ -72,7 +72,7 @@ The rules you have to do:
                 temperature = 0.9,
                 messages = [
                     {"role": "system", "content" : assistant},
-                    {"role": "user", "content" : query['query']},
+                    *chat_history
                 ]
             )
             result = res["choices"][0]["message"]["content"]
