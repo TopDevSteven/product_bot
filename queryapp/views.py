@@ -56,6 +56,7 @@ The rules you have to do:
 1) when you answer above the values like diameter, you have to set the unit. but here this kinds of unit should be `mm`.
 2) if the questions is about search there the products are (for instance `what tools do you have`), you have to answer based on datasource, mustly, not from openai.
 3) when you answer the information of tools or products, you have to consider about the key and values of datasourse mainly.
+4) don't say like this: Sorry, as an AI assistant.
 
 
 """
@@ -63,6 +64,7 @@ The rules you have to do:
         chat_history.append({'role': 'user', 'content': query['query']})
         total_tokens = sum([len(m["content"].split()) for m in chat_history])
         while total_tokens > 4000: # slightly less than model's max token limit for safety
+            removed_message = chat_history.pop(0)
             removed_message = chat_history.pop(0)
             removed_message = chat_history.pop(0)
             total_tokens -= len(removed_message["content"])
