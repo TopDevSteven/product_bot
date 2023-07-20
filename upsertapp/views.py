@@ -12,7 +12,7 @@ def create_embedding(content):
     try:
         res = openai.Embedding.create(
             model="text-embedding-ada-002",
-            input=content[1300:2600]
+            input=content[0:1300]
         )
         embedding =  []
         vec_indexes = []
@@ -116,7 +116,8 @@ from .try_pdf import *
 def upsert(request):
     if request.method == "GET":
         try:
-            contents = parse_shopify_json("./csvFiles/clamping heads_shopify_products (1).csv")
+            # contents = parse_shopify_json("./csvFiles/clamping heads_shopify_products (1).csv")
+            contents = parse_pdf_json("./csvFiles/clamping heads PDF (2) (1).csv")
             metadata, embedding, vec_indexes = create_embedding(contents)
             vector = list(zip(vec_indexes, embedding, metadata))
             isUpsertingEmbedding = upsert_embedding(vector)

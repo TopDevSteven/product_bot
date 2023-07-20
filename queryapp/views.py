@@ -36,6 +36,7 @@ def chat(request):
         for i in query_res["matches"]:
             basedon_content.append(i["metadata"]["content"])
         basedon_content = get_uniquedata_shopify(basedon_content)
+        print(basedon_content)
         for i in basedon_content:
             json_lists += i
         json_lists = limit_string_tokens(json_lists, 2000)
@@ -63,8 +64,6 @@ The rules you have to do:
         total_tokens = sum([len(m["content"].split()) for m in chat_history])
         while total_tokens > 4000: # slightly less than model's max token limit for safety
             removed_message = chat_history.pop(0)
-            removed_message = chat_history.pop(0)
-            removed_message = chat_history.pop(0)
             total_tokens -= len(removed_message["content"])
         try:
             res = openai.ChatCompletion.create(
@@ -72,11 +71,12 @@ The rules you have to do:
                 temperature = 0.9,
                 messages = [
                     {"role": "system", "content" : assistant},
-                    *chat_history
+                    {"role": "user", "content" : query['query']},
                 ]
             )
             result = res["choices"][0]["message"]["content"]
             chat_history.append({"role": "assistant", "content": result})
+            chat_history.pop(0)
             return JsonResponse({"message": result})
         except Exception as e:
             print(traceback.format_exc())
