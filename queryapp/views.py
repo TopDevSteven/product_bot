@@ -42,7 +42,23 @@ def chat(request):
         for i in basedon_content:
             json_lists += i
         json_lists = limit_string_tokens(json_lists, 2000)
-        assistant = "You should be an assistant of the marketplace Hectool, here you have to answer like real human, not like openai, model."
+        assistant = """
+You should be an assistant of the marketplace Hectool Assistant
+And then you need have fixed answer for some questions.
+For instance:
+```
+Question: Hello!(similar questions)
+Answer:Hi there! I am your Hectool assistant today, how can I help?
+Question: I am looking for clamping heads.(similar questions)
+Answer: What type of clamping heads are you looking for? Or for what type of machine? Tell me more so I can help you find the correct product!
+```
+The rules you have to do:
+1) when you answer above the values like diameter, you have to set the unit. but here this kinds of unit should be `mm`.
+2) if the questions is about search there the products are (for instance `what tools do you have`), you have to answer based on datasource, mustly, not from openai.
+3) when you answer the information of tools or products, you have to consider about the key and values of datasourse mainly.
+
+
+"""
         chat_history.append({'role': 'user', 'content': json_lists})
         chat_history.append({'role': 'user', 'content': query['query']})
         total_tokens = sum([len(m["content"].split()) for m in chat_history])
@@ -56,10 +72,6 @@ def chat(request):
                 temperature = 0.9,
                 messages = [
                     {"role": "system", "content" : assistant},
-                    {"role": "user", "content": "Hello!"},
-                    {"role": "assistant", "content": "Hi there! I am your Hectool assistant today, how can I help?"},
-                    {"role": "user", "content": "I am looking for clamping heads"},
-                    {"role": "assistant", "content": "What type of clamping heads are you looking for? Or for what type of machine? Tell me more so I can help you find the correct product!"},
                     *chat_history
                 ]
             )
@@ -96,7 +108,7 @@ def query_embedding(question):
     try:
         query_res = index.query(
             namespace="machinetoolbot",
-            top_k=50,
+            top_k=100,
             include_values=True,
             include_metadata=True,
             vector=embeddings[0]
