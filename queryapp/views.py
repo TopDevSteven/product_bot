@@ -40,6 +40,7 @@ def chat(request):
         for i in basedon_content:
             json_lists += i
         json_lists = limit_string_tokens(json_lists, 2000)
+
         assistant = """
 You should be an assistant of the marketplace Hectool Assistant
 And then you need have fixed answer for some questions.
@@ -57,8 +58,6 @@ The rules you have to do:
 4) don't say like this: Sorry, as an AI assistant.
 5) you have to know that  ø is equal to diameter.
 6) if you need more specific information from user, you have to add the more examples based on datasource.
-
-
 """
         chat_history.append({'role': 'user', 'content': json_lists})
         chat_history.append({'role': 'user', 'content': query['query']})
@@ -69,7 +68,7 @@ The rules you have to do:
         try:
             res = openai.ChatCompletion.create(
                 model = "gpt-4",
-                temperature = 0.9,
+                temperature = 0.3,
                 messages = [
                     {"role": "system", "content" : assistant},
                     *chat_history
@@ -108,7 +107,7 @@ def query_embedding(question):
     try:
         query_res = index.query(
             namespace="machinetoolbot",
-            top_k=100,
+            top_k=1000,
             include_values=True,
             include_metadata=True,
             vector=embeddings[0]
@@ -117,8 +116,7 @@ def query_embedding(question):
     except Exception as e:
         print(traceback.format_exc())
         return False
-        
-
+    
 def limit_string_tokens(string, max_tokens):
     tokens = string.split()
     if len(tokens) <= max_tokens:
