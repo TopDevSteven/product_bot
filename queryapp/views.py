@@ -5,6 +5,7 @@ import json
 import traceback
 import openai
 import pinecone
+from .query_json import *
 # Create your views here.
 
 
@@ -27,15 +28,22 @@ def home(request):
 def chat(request):
     if request.method == "POST":
         query = json.loads(request.body)
+        print(query)
         query_res = query_embedding([query['query']])
+        print(query_res)
         if not query_res:
             return JsonResponse({"message": "Querying Embedding Error!!!"})
-        basedon_content = ""
+        basedon_content = []
+        json_lists = ""
         for i in query_res["matches"]:
-            basedon_content += i["metadata"]["content"]
-        basedon_content = limit_string_tokens(basedon_content, 2000)
-        assistant = "You are helpfull machine tool assistant bot, here you have to answer like real human, not like openai, model."
-        chat_history.append({'role': 'user', 'content': basedon_content})
+            basedon_content.append(i["metadata"]["content"])
+        basedon_content = get_uniquedata_shopify(basedon_content)
+        print(basedon_content)
+        for i in basedon_content:
+            json_lists += i
+        json_lists = limit_string_tokens(json_lists, 2000)
+        assistant = "You should be an assistant of the marketplace Hectool, here you have to answer like real human, not like openai, model."
+        chat_history.append({'role': 'user', 'content': json_lists})
         chat_history.append({'role': 'user', 'content': query['query']})
         total_tokens = sum([len(m["content"].split()) for m in chat_history])
         while total_tokens > 4000: # slightly less than model's max token limit for safety
@@ -49,7 +57,7 @@ def chat(request):
                 messages = [
                     {"role": "system", "content" : assistant},
                     {"role": "user", "content": "Hello!"},
-                    {"role": "assistant", "content": "Hello! I am your technical Hectool assistant. How can I help you?"},
+                    {"role": "assistant", "content": "Hi there! I am your Hectool assistant today, how can I help?"},
                     {"role": "user", "content": "I am looking for clamping heads"},
                     {"role": "assistant", "content": "What type of clamping heads are you looking for? Or for what type of machine? Tell me more so I can help you find the correct product!"},
                     *chat_history
@@ -68,6 +76,7 @@ def create_embedding(content):
             model="text-embedding-ada-002",
             input=content
         )
+        print(res)
         embedding =  []
         vec_indexes = []
         idx = 0
@@ -87,7 +96,7 @@ def query_embedding(question):
     try:
         query_res = index.query(
             namespace="machinetoolbot",
-            top_k=10,
+            top_k=50,
             include_values=True,
             include_metadata=True,
             vector=embeddings[0]
