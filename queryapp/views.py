@@ -28,7 +28,8 @@ def home(request):
 def chat(request):
     if request.method == "POST":
         query = json.loads(request.body)
-        query_res = query_embedding([query['query']])
+        message_list = " ".join(json.dumps(obj) for obj in chat_history)
+        query_res = query_embedding(" ".join(message_list))
         if not query_res:
             return JsonResponse({"message": "Querying Embedding Error!!!"})
         basedon_content = []
@@ -107,7 +108,7 @@ def query_embedding(question):
     try:
         query_res = index.query(
             namespace="machinetoolbot",
-            top_k=1000,
+            top_k=250,
             include_values=True,
             include_metadata=True,
             vector=embeddings[0]
