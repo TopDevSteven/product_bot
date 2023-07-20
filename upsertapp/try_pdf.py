@@ -51,7 +51,7 @@ def parse_pdf_json(path):
         bore = row['Bore']
         available_in = row['Available In']
         each = {
-            "Product Name" : product_name,
+            "Title" : product_name,
             "Ref./Art." : ref,
             "Length" : length,
             "Diameter" : diameter,
