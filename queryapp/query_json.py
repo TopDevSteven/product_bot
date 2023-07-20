@@ -1,12 +1,12 @@
 import json
 
 def get_uniquedata_pdf(content_list):
-    product_names = set(item["Product Name"] for item in content_list)
+    product_names = set(json.loads(item)["Product Name"] for item in content_list)
     # unique_items = [item for item in random_data if item["Product Name"] in product_names]
     unique_data = []
     for each_product in product_names:
         for each_random in content_list:
-            if each_product == each_random['Title']:
+            if each_product == json.loads(each_random)['Title']:
                 unique_data.append(each_random)
     if len(unique_data) <2:
         return content_list
@@ -23,11 +23,11 @@ def get_uniquedata_pdf(content_list):
     return unique_data
 
 def get_uniquedata_shopify(content_list):
-    product_names = set(item["Title"] for item in content_list)
+    product_names = set(json.loads(item)["Title"] for item in content_list)
     unique_data = []
     for each_product in product_names:
         for each_random in content_list:
-            if each_product == each_random['Title']:
+            if each_product == json.loads(each_random)['Title']:
                 unique_data.append(each_random)
     
     if len(unique_data) <2:

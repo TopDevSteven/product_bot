@@ -54,6 +54,7 @@ The rules you have to do:
 2) if the questions is about search there the products are (for instance `what tools do you have`), you have to answer based on datasource, mustly, not from openai.
 3) when you answer the information of tools or products, you have to consider about the key and values of datasourse mainly.
 4) don't say like this: Sorry, as an AI assistant.
+5) you have to know that  ø is equal to diameter.
 
 
 """
